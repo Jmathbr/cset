@@ -49,7 +49,7 @@ void setup() {
 // Loop --------------------------------------------
 void loop() {
   digitalWrite(LED_PIN, LED_ON);
-  delay(10000);
+  delay(1000);
   digitalWrite(LED_PIN, LED_OFF);
-  delay(2000);
+  delay(200);
 }
