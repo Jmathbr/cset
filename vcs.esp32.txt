@@ -1,0 +1,10 @@
+{
+  "swVersion": "1.1",
+  "swMandatory": false,
+  "swRelease": "2021-05-19T12:00:00Z",
+  "swURL": "https://raw.githubusercontent.com/Jmathbr/cset/main/Blink.ino.esp32.bin",
+  "fsVersion": "1.1",
+  "fsMandatory": false,
+  "fsRelease": "2021-05-19T13:00:00Z",
+  "fsURL": "https://raw.githubusercontent.com/Jmathbr/cset/main/Blink.spiffs.esp32.bin"
+}
