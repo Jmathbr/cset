@@ -3,15 +3,13 @@
 #include <SPIFFS.h>
 #include <HTTPClient.h>
 #include "ArduinoJson.h"
-#include"esp_ota_ops.h"
-#include "esp_partition.h"
-//#include "Hash.h"
 
-const char*   SSID      = "brisa-1386277";
-const char*   PASSWORD  = "ledafyje";
+const char*   SSID      = "Rede Desconectada";
+const char*   PASSWORD  = "988641988coelho";
 const char*   VCS_URL   = "https://cest.imd.ufrn.br/cest-api/firmware/last-update";
 const char*   auth_url = "https://cest.imd.ufrn.br/cest-api/auth";
-String leitura;
+String leitura, httpRequestData;
+const char* token ;
 
 void setup() {
   // INIT
@@ -62,38 +60,52 @@ void setup() {
   } else {
     Serial.println("Inside: Arquivo não encontrado");
   }
-  
+
 //==================================================
 //HTTP GET + JSON
- // HTTPClient http;
- // http.begin(VCS_URL);
- // int httpCode = http.GET();
- // String payload = http.getString();
-  //Serial.println("External: " + httpCode);
- // Serial.println("External: " + payload);
- // deserializeJson(doc, payload);
- // String Url = doc["swURL"];
- // Serial.println("External: URL FIRMWARE: "+Url);
- // http.end();
+  HTTPClient http; //Declarado o HTTP, nao precisa redeclarar 
+  http.begin(VCS_URL);
+  int httpCode = http.GET();
+  String payload = http.getString();
+  Serial.println("External: " + httpCode);
+  Serial.println("External: " + payload);
+  deserializeJson(doc, payload);
+  String Url = doc["swURL"];
+  Serial.println("External: URL FIRMWARE: "+Url);
+  http.end();
 
-  
 //==================================================
 //==================================================
 //HTTP POST + JSON
- HTTPClient http;
  http.begin(auth_url);
- http.addHeader("Content-Type", "text/plain");
-String httpRequestData = "{\"password\":\"admin\" , \"username\":\"admin\"}";
-  deserializeJson(doc, httpRequestData);
-  JsonObject obj = doc.as<JsonObject>();
+ http.addHeader("Content-Type", "application/json");
+ 
+ StaticJsonDocument<64> auth;
+
+ auth["username"] = "admin";
+ auth["password"] = "admin";
+
+serializeJson(auth, httpRequestData);
 
  int httpResponseCode = http.POST(httpRequestData);
- String payload = http.getString();
-  
- Serial.println("External: " + payload);
- Serial.println(httpResponseCode);
-
+ String return_post = http.getString();
  http.end();
+ 
+ StaticJsonDocument<256> op;
+
+ DeserializationError error = deserializeJson(op, return_post);
+
+  if (error) {
+    Serial.print(F("deserializeJson() failed: "));
+    Serial.println(error.f_str());
+    return;
+  }
+
+ token = op["jwt"];
+ Serial.print("External: Token: ");
+ Serial.println(token);
+
+
 
 //==================================================
 //String md5 = ESP.getSketchMD5();
