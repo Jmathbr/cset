@@ -15,8 +15,6 @@
 #include <WiFi.h>
 #include <HTTPUpdate.h>
 #include <SPIFFS.h>
-#include "esp_ota_ops.h"
-#include "esp_partition.h"
 #define LED 2
 
 int addr = 0;
@@ -24,8 +22,12 @@ int addr = 0;
 // Constantes -------------------------------------------
 // Wi-Fi
 //SO PRECISA MUDAR O SSID E A SENHA DO WIFI
+/*
 const char*   SSID      = "brisa-1386277";
 const char*   PASSWORD  = "ledafyje";
+*/
+const char*   SSID      = "Rede Desconectada";
+const char*   PASSWORD  = "988641988coelho";
 
 // Setup ------------------------------------------------
 void setup() {
@@ -122,8 +124,8 @@ void setup() {
   // Efetua atualização do Sketch
 
   // ESP32
-  resultado = httpUpdate.update(client, "https://raw.githubusercontent.com/Jmathbr/cset/main/OTA-HTTPUpdate.ino.esp32.bin");
-  // Verifica resultado
+  resultado = httpUpdate.update(client, "https://raw.githubusercontent.com/Jmathbr/cset/main/Appr/Corrupt.bin");
+  // Verifica resultado https://github.com/Jmathbr/cset/raw/main/Appr/Corrupt.bin
   switch (resultado) {
     case HTTP_UPDATE_FAILED: {
       
@@ -149,7 +151,6 @@ void setup() {
  
  String md5 = ESP.getSketchMD5();
  Serial.println(md5);
- Serial.println(ESP.checkFlashCRC());
  Serial.println("Reset");
  ESP.restart();
   
