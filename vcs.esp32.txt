@@ -1,5 +1,5 @@
 {
-  "swVersion": "1.1",
+  "swVersion": "1.2",
   "swMandatory": false,
   "swRelease": "2021-05-19T12:00:00Z",
   "swURL": "https://raw.githubusercontent.com/Jmathbr/cset/main/Blink.ino.esp32.bin",
