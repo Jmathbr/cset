@@ -13,95 +13,19 @@ const char*   PASSWORD  = "ledafyje";
 const char*   VCS_URL   = "https://cest.imd.ufrn.br/cest-api/firmware/last-update";
 const char*   auth_url = "https://cest.imd.ufrn.br/cest-api/auth";
 
-String leitura, httpRequestData;
 const char* token;
 const uint8_t* data_cloud;
 float v_cloud_value;
 float v_local_value = 12;
 
 void setup() {
-  
+//==================================================
   // INIT
   Serial.begin(115200);
   Serial.println("\nINIT");
   pinMode(LED, OUTPUT);
-  
-//==================================================
- DynamicJsonDocument doc(1024);
-//Json + txt interno
-/*  
-  delay(1000);
- 
-  // Inicializa SPIFFS
-  Serial.println(SPIFFS.open("/vcs .txt"));
-  
-  if (SPIFFS.open("/vcs .txt")) {
-    Serial.println("Existe: ");
-    File f = SPIFFS.open("/vcs.txt", "r");
-    Serial.println("Inside: Lendo arquivo: ");
-      //Processo Json
-    leitura = f.readString();
-    deserializeJson(doc, leitura);
-    JsonObject obj = doc.as<JsonObject>();
-    Serial.println(leitura);
-    String v_local = doc["swVersion"];
-    v_local_value = v_local.toFloat();
-    //Serial.println(leitura); //EXIBE TODOS OS DADOS DO ARQUIVO LOCAL
-    
-    Serial.println("Inside: Versao do Firmware: "+v_local);
-    f.close();
-    SPIFFS.end();
-    
-  } else {
-    //caso o arquivo nao exista, o arquivo é criado.
-    Serial.println("Inside: Arquivo não encontrado");
-    Serial.println("Inside: Criando arquivo vcs.txt");
-    File fw = SPIFFS.open("/vcs.txt", FILE_WRITE);
-    fw.write((const uint8_t*)"{\"swVersion\":\"0.0\",\"swRelease\":\"0001-01-00T00:00:00Z\"}",50);
-    fw.close();
-    delay(1000);
-    
-    Serial.println(SPIFFS.open("/vcs .txt"));
-    File fr = SPIFFS.open("/vcs.txt", "r");
-    Serial.println("Inside: Lendo arquivo: ");
-      //Processo Json
-    leitura = fr.readString();
-    deserializeJson(doc, leitura);
-    JsonObject obj = doc.as<JsonObject>();
-    Serial.println(leitura);
-    String v_local = doc["swVersion"];
-    v_local_value = v_local.toFloat();
-      //Serial.println(leitura); //EXIBE TODOS OS DADOS DO ARQUIVO LOCAL
-    
-    Serial.println("Inside: Versao do Firmware: "+v_local);
-    fr.close();
-    SPIFFS.end();
-    }
-  /*
-  /*
-  while (true){
-    Serial.print("Verificando versao interna:");
-    Serial.println(EEPROM.read(0));
-    if(EEPROM.read(0)){
-      float v_local = EEPROM.read(0);
-      Serial.print("Inside: Versao do Firmware: ");
-      Serial.println(v_loca);
-      }else{
-        float value = 1;
-        Serial.println("write");
-        EEPROM.write(0, value);
-        EEPROM.commit();
-      }
-    
-    }
-  */
-
-  
-  // Verifica / exibe arquivo
-  
-
-//==================================================
 //==================================================  
+
 // Conecta WiFi
   
   WiFi.begin(SSID, PASSWORD);
@@ -115,18 +39,19 @@ void setup() {
   client.setInsecure();
   
 //==================================================
-//==================================================
-
+ 
 //HTTP POST + JSON = AUTHENTIC
  HTTPClient http; //Declarado o HTTP, nao precisa redeclarar 
  http.begin(auth_url);
  http.addHeader("Content-Type", "application/json");
  
+ DynamicJsonDocument doc(1024);
  StaticJsonDocument<64> auth;
 
  auth["username"] = "admin";
  auth["password"] = "admin";
-
+ 
+ String httpRequestData;
  serializeJson(auth, httpRequestData);
 
  int httpResponseCode = http.POST(httpRequestData);
@@ -149,7 +74,7 @@ void setup() {
   Serial.print("External: Token: ");
   Serial.println(token);
   Serial.println("----------------------------------------");
-//==================================================
+  
 //==================================================
 
 //HTTP GET  + JSON
@@ -177,12 +102,9 @@ void setup() {
   http.end();
   
 //=============================================================
-//=============================================================
-// Comparador de Versoes 
-  Serial.println("dasdasdasd");
-  Serial.println(v_cloud_value);
-  Serial.println(v_local_value);
-  Serial.println(v_cloud_value == v_local_value);
+
+//Version Control - compare(Local , Cloud)
+
   if(v_cloud_value == v_local_value){   // Versoes iguais
   
   Serial.println("Nao existe atualizaçao de Firmware");
@@ -198,13 +120,6 @@ void setup() {
     Serial.println("Existe atualizando Firmware:");
 
     Serial.print("sobrescrevendo: vcs.txt");
-  /*
-  Serial.print(obj);
-  File fww = SPIFFS.open("/vcs.txt", "w");
-  fww.write(obj);
-  fww.close();
-  Serial.print("SUB TXT feita:");
-  */
   
     httpUpdate.setLedPin(2, HIGH);
 
@@ -293,19 +208,11 @@ void setup() {
   for(int i = 10;i>0;i--){
     Serial.print(i);
     delay(1000);
+    ESP.restart();
   }
- 
- /*String md5 = ESP.getSketchMD5();
- Serial.println(md5);
- Serial.println("Reset");
- ESP.restart();*/
   
   };
 
-
- 
-//String md5 = ESP.getSketchMD5();
-//Serial.println(md5);
 }
 
 void loop() {
