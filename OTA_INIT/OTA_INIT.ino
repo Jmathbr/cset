@@ -16,7 +16,7 @@ const char*   auth_url = "https://cest.imd.ufrn.br/cest-api/auth";
 const char* token;
 const uint8_t* data_cloud;
 float v_cloud_value;
-float v_local_value = 12;
+float v_local_value = 13;
 
 void setup() {
 //==================================================
@@ -111,7 +111,7 @@ void setup() {
   
   } else{   // Versao da nuvem superior ao firmware
   
-    if (SPIFFS.begin()) {
+    if (SPIFFS.begin(true)) {
       Serial.println("SPIFFS Ok");
     } else {
       Serial.println("SPIFFS Falha");
