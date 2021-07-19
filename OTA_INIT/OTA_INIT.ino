@@ -27,7 +27,7 @@ void setup() {
 //==================================================  
 
 // Conecta WiFi
-  
+ 
   WiFi.begin(SSID, PASSWORD);
   Serial.println("\nConectando WiFi " + String(SSID));
   while(WiFi.status() != WL_CONNECTED) {
@@ -40,11 +40,11 @@ void setup() {
   
 //==================================================
  
-//HTTP POST + JSON = AUTHENTIC
+//HTTP POST + JSON = AUTHENTIC 
  HTTPClient http; //Declarado o HTTP, nao precisa redeclarar 
  http.begin(auth_url);
  http.addHeader("Content-Type", "application/json");
- 
+
  DynamicJsonDocument doc(1024);
  StaticJsonDocument<64> auth;
 
